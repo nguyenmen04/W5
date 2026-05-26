@@ -100,7 +100,7 @@
 | **Stage** | prod |
 | **Integration Type** | Lambda Proxy Integration (Kết nối với hàm `W5-Backend`) |
 | **Authentication** | Bắt buộc dùng API Key (Header `x-api-key`) |
-| **CORS** | ✅ Enabled (Cho phép Frontend gọi chéo miền) |
+| **CORS** | Enabled (Cho phép Frontend gọi chéo miền) |
 **Bằng chứng Auth (200 & 403):**
 > *Screenshot lệnh test cURL báo lỗi 403 khi thiếu API Key*
 > 💡 **Hướng dẫn lấy ảnh 403:** Mở PowerShell trên máy tính, chạy lệnh: `curl -i https://ztd80lx47e.execute-api.ap-southeast-1.amazonaws.com/prod/api/files` rồi chụp ảnh kết quả trả về `HTTP/1.1 403 Forbidden`.
