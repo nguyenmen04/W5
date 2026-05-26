@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure File Hub | W5 Fortress</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            /* Sleek Professional Palette */
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --secondary: #0ea5e9;
+            --success: #10b981;
+            --danger: #ef4444;
+
+            /* Deep Slate Theme */
+            --bg-base: #0f172a;
+            --surface-glass: rgba(30, 41, 59, 0.7);
+            --surface-hover: rgba(51, 65, 85, 0.5);
+            --border-light: rgba(255, 255, 255, 0.08);
+            --border-focus: rgba(99, 102, 241, 0.5);
+
+            /* Typography */
+            --text-h1: #f8fafc;
+            --text-body: #cbd5e1;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            background-image:
+                radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(14, 165, 233, 0.08) 0%, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-body);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Clean Header */
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-h1);
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        /* Refined Glassmorphism */
+        .glass-panel {
+            background: var(--surface-glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.2);
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+
+        .glass-panel:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .glass-panel:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-h1);
+            margin-bottom: 24px;
+        }
+
+        .panel-title i {
+            color: var(--primary);
+            font-size: 1.4rem;
+            background: rgba(99, 102, 241, 0.1);
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        /* Modern Form & Upload */
+        .upload-form {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-upload-wrapper {
+            flex-grow: 1;
+            position: relative;
+        }
+
+        .custom-file-upload {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 20px;
+            border: 1px dashed var(--border-light);
+            border-radius: 12px;
+            cursor: pointer;
+            color: var(--text-body);
+            background: rgba(255, 255, 255, 0.02);
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .custom-file-upload:hover {
+            border-color: var(--border-focus);
+            background: rgba(99, 102, 241, 0.05);
+            color: var(--text-h1);
+        }
+
+        #file-name-display {
+            margin-left: auto;
+            font-size: 0.9rem;
+            color: var(--secondary);
+            font-weight: 500;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:disabled {
+            background-color: #475569;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Enterprise Table */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .modern-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .modern-table th {
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0 16px 16px 16px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .modern-table td {
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            font-size: 0.95rem;
+        }
+
+        .modern-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .modern-table tbody tr:hover td {
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        /* Alerts */
+        .alert {
+            background: rgba(99, 102, 241, 0.1);
+            border-left: 3px solid var(--primary);
+            padding: 16px;
+            border-radius: 8px;
+            display: none;
+            /* Ẩn mặc định */
+            align-items: center;
+            gap: 12px;
+            color: var(--text-h1);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        .alert i {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .alert.error {
+            border-left-color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .alert.error i {
+            color: var(--danger);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>Secure File Hub</h1>
+        <p>AWS W5 Network Fortress Implementation</p>
+    </div>
+
+    <div class="container">
+        <div id="message-box" class="alert">
+            <i class="ph-fill ph-info"></i>
+            <span id="message-text"></span>
+        </div>
+
+        <div class="glass-panel">
+            <div class="panel-title">
+                <i class="ph-fill ph-cloud-arrow-up"></i>
+                <span>Upload to EFS Storage</span>
+            </div>
+            <form id="uploadForm" class="upload-form">
+                <div class="file-upload-wrapper">
+                    <label class="custom-file-upload">
+                        <i class="ph ph-paperclip"></i>
+                        <span>Choose a file to upload...</span>
+                        <input type="file" id="fileInput" required
+                            onchange="document.getElementById('file-name-display').innerText = this.files[0].name">
+                        <span id="file-name-display"></span>
+                    </label>
+                </div>
+                <button type="submit" id="submitBtn" class="btn btn-primary">
+                    <i class="ph-bold ph-upload-simple" id="btnIcon"></i>
+                    <span id="btnText">Upload</span>
+                </button>
+            </form>
+        </div>
+
+        <div class="glass-panel">
+            <div class="panel-title">
+                <i class="ph-fill ph-database"></i>
+                <span>Metadata Registry (DynamoDB)</span>
+            </div>
+            <div class="table-container">
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>Filename</th>
+                            <th>Upload Time (UTC)</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr>
+                            <td colspan="3" style="text-align:center; color: var(--text-muted)">Loading data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // MÀY CẦN THAY THẾ 2 DÒNG NÀY KHI ĐÃ CÓ AWS API GATEWAY
+        const API_GATEWAY_URL = 'https://ztd80lx47e.execute-api.ap-southeast-1.amazonaws.com/prod';
+        const API_KEY = 'K6U0InMaVu7jiKPRVxvbH8OIBhdTnJyog2xuYGfc';
+
+        const headers = {
+            'x-api-key': API_KEY
+        };
+
+        // Hàm hiển thị thông báo
+        function showMessage(text, isError = false) {
+            const msgBox = document.getElementById('message-box');
+            const msgText = document.getElementById('message-text');
+            msgText.innerText = text;
+            msgBox.style.display = 'flex';
+            if (isError) {
+                msgBox.classList.add('error');
+                msgBox.querySelector('i').className = 'ph-fill ph-warning-circle';
+            } else {
+                msgBox.classList.remove('error');
+                msgBox.querySelector('i').className = 'ph-fill ph-check-circle';
+            }
+            // Tự tắt sau 5 giây
+            setTimeout(() => { msgBox.style.display = 'none'; }, 5000);
+        }
+
+        // 1. Hàm gọi danh sách file từ API
+        async function fetchFiles() {
+            const tbody = document.getElementById('tableBody');
+            try {
+                // Nhớ đổi API link cho đúng của m
+                const response = await fetch(`${API_GATEWAY_URL}/api/files`, { headers });
+
+                if (response.status === 403) {
+                    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color: var(--danger)">Error 403: Forbidden (Check API Key)</td></tr>`;
+                    showMessage("API Key is missing or invalid. MH4 Active!", true);
+                    return;
+                }
+
+                if (response.status === 429) {
+                    showMessage("Error 429: Too Many Requests (Throttling / MH5 Active!)", true);
+                    return;
+                }
+
+                if (!response.ok) throw new Error('Network response was not ok');
+
+                const data = await response.json();
+
+                if (data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color: var(--text-muted)">No records found in DynamoDB.</td></tr>`;
+                    return;
+                }
+
+                // Vẽ HTML ra bảng
+                tbody.innerHTML = data.map(item => `
+                    <tr>
+                        <td style="color: var(--text-h1); font-weight: 500;">
+                            <i class="ph-fill ph-file" style="margin-right: 8px; color: var(--text-muted);"></i>
+                            ${item.filename || 'Unknown'}
+                        </td>
+                        <td>${new Date(item.upload_time).toLocaleString()}</td>
+                        <td><span class="status-badge">${item.status || 'Uploaded'}</span></td>
+                    </tr>
+                `).join('');
+
+            } catch (error) {
+                console.error('Error fetching files:', error);
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color: var(--danger)">Failed to connect to API Gateway.</td></tr>`;
+            }
+        }
+
+        // 2. Xử lý nút Submit form upload
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fileInput = document.getElementById('fileInput');
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const btnIcon = document.getElementById('btnIcon');
+
+            if (!fileInput.files[0]) return;
+
+            // Hiệu ứng Loading
+            submitBtn.disabled = true;
+            btnText.innerText = "Uploading...";
+            btnIcon.className = "ph-bold ph-spinner ph-spin"; // Spinner quay vòng
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const response = await fetch(`${API_GATEWAY_URL}/api/upload`, {
+                    method: 'POST',
+                    headers: headers, // Fetch API tự lo Content-Type khi gửi FormData
+                    body: formData
+                });
+
+                if (response.status === 403) throw new Error("403 Forbidden");
+                if (response.status === 429) throw new Error("429 Too Many Requests");
+
+                const result = await response.json();
+                showMessage(result.message || "File uploaded successfully!");
+
+                // Reset form và load lại bảng
+                document.getElementById('uploadForm').reset();
+                document.getElementById('file-name-display').innerText = "";
+                fetchFiles();
+            } catch (error) {
+                showMessage(`Upload failed: ${error.message}`, true);
+            } finally {
+                // Tắt hiệu ứng Loading
+                submitBtn.disabled = false;
+                btnText.innerText = "Upload";
+                btnIcon.className = "ph-bold ph-upload-simple";
+            }
+        });
+
+        // Tự động load dữ liệu khi vào web
+        window.onload = fetchFiles;
+    </script>
+</body>
+
+</html>

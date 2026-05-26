@@ -1,0 +1,3 @@
+Chao buoi chieu! 
+Day la file test upload cho du an W5 Secure File Hub.
+Chung ta da hoan thanh xuat sac kien truc bao mat tren AWS hom nay!
