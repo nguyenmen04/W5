@@ -33,6 +33,14 @@
 **Lựa chọn Topology:** Single-VPC (Sử dụng Default VPC của AWS)
 **Lý do (Rationale):** Ứng dụng "Secure File Hub" ở giai đoạn hiện tại có quy mô nhỏ, tập trung vào việc quản lý file và xác thực cơ bản, chưa có nhu cầu phân tách mạng phức tạp giữa các phòng ban. Việc dùng chung 1 VPC với Multi-AZ (3 Subnets) là đủ để đảm bảo tính sẵn sàng cao (High Availability) và tối ưu chi phí hạ tầng.
 
+### 1. Tổng quan cấu hình mạng
+| Thông tin | Chi tiết |
+|-----------|---------|
+| **VPC Model** | Single VPC Architecture (Default VPC) |
+| **Subnet Design** | 3 Public Subnets (Trải dài trên 3 Availability Zones) |
+| **Internet Access** | Thông qua Internet Gateway mặc định |
+| **Flow Logs** | ✅ Enabled (Ghi log vào CloudWatch) |
+
 **Bằng chứng Flow Logs:**
 > *Screenshot dòng log VPC Flow Logs (hiển thị ACCEPT hoặc REJECT)*
 > 💡 **Hướng dẫn lấy ảnh:** 1. Vào dịch vụ **VPC** > Chọn VPC của bạn. 2. Chuyển sang tab **Flow logs**, bấm vào tên cái *Destination* (CloudWatch Logs) màu xanh. 3. Trong CloudWatch, bấm vào cái *Log stream* đầu tiên. 4. Chụp màn hình các dòng log hiển thị chữ ACCEPT hoặc REJECT.
@@ -45,6 +53,12 @@
 **Path đã chọn:** Hardened SG + NACL (Sử dụng VPC Endpoint)
 **Lý do (Rationale):** Vì hệ thống sử dụng VPC mặc định và không có NAT Gateway, toàn bộ giao tiếp giữa Lambda và DynamoDB được cô lập hoàn toàn khỏi Internet thông qua Gateway VPC Endpoint. Do đó, áp dụng NACL để chặn các port không cần thiết ở biên mạng là phương pháp tối ưu nhất.
 
+### 1. Cấu hình Network ACL (NACL) Inbound
+| Rule Number | Type | Protocol | Port Range | Source | Allow/Deny |
+|-------------|------|----------|------------|--------|------------|
+| 99 | SSH (22) | TCP | 22 | 0.0.0.0/0 | ❌ DENY |
+| 100 | All traffic | All | All | 0.0.0.0/0 | ✅ ALLOW |
+
 **Bằng chứng Block Request:**
 > *Screenshot màn hình Inbound Rules của NACL hiển thị Rule số 99 chặn port 22 (SSH)*
 > 💡 **Hướng dẫn lấy ảnh:** 1. Vào dịch vụ **VPC** > menu trái chọn **Network ACLs**. 2. Chọn NACL của VPC hiện tại. 3. Chọn tab **Inbound rules**. 4. Chụp toàn bộ màn hình hiển thị Rule số 99 chặn port 22 (Type: SSH, Source: 0.0.0.0/0, Allow/Deny: Deny).
@@ -54,6 +68,14 @@
 ---
 
 ## MH3 — File Storage Layer + Backup Plan
+
+### 1. Cấu hình Amazon EFS
+| Thông tin | Chi tiết |
+|-----------|---------|
+| **Tên File System** | W5-Secure-File-Hub |
+| **Access Point** | `/app` (POSIX User: 1000, Permissions: 0777) |
+| **Mount Target SG** | `EFS-SG` (Cho phép cổng NFS 2049) |
+| **Local Mount Path** | `/mnt/efs` (Gắn vào Lambda) |
 **Bằng chứng EFS/FSx Mount & Ghi/Đọc:**
 > *Screenshot thư mục /mnt/efs/uploads có chứa file được upload từ frontend (hoặc màn hình cấu hình EFS Mount trong Lambda)*
 > 💡 **Hướng dẫn lấy ảnh:** 1. Vào dịch vụ **Lambda** > Chọn hàm `W5-Backend`. 2. Chuyển sang tab **Configuration** > Chọn menu **File system** ở bên trái. 3. Chụp màn hình thể hiện ổ đĩa EFS đang được gắn với Local mount path là `/mnt/efs`.
@@ -69,6 +91,15 @@
 ---
 
 ## MH4 — API Gateway trước Lambda
+
+### 1. Cấu hình API Gateway
+| Thông tin | Chi tiết |
+|-----------|---------|
+| **API Type** | REST API |
+| **Stage** | prod |
+| **Integration Type** | Lambda Proxy Integration (Kết nối với hàm `W5-Backend`) |
+| **Authentication** | Bắt buộc dùng API Key (Header `x-api-key`) |
+| **CORS** | ✅ Enabled (Cho phép Frontend gọi chéo miền) |
 **Bằng chứng Auth (200 & 403):**
 > *Screenshot lệnh test cURL báo lỗi 403 khi thiếu API Key*
 > 💡 **Hướng dẫn lấy ảnh 403:** Mở PowerShell trên máy tính, chạy lệnh: `curl -i https://ztd80lx47e.execute-api.ap-southeast-1.amazonaws.com/prod/api/files` rồi chụp ảnh kết quả trả về `HTTP/1.1 403 Forbidden`.
@@ -84,6 +115,13 @@
 
 ## MH5 — Serverless Scaling Pattern
 **Pattern đã chọn:** Reserved Concurrency
+
+### 1. Cấu hình Lambda Scaling
+| Thông tin | Chi tiết |
+|-----------|---------|
+| **Function Name** | W5-Backend |
+| **Scaling Pattern** | Reserved Concurrency |
+| **Target Concurrency** | 5 (Bị chặn do giới hạn Quota của tài khoản Lab) |
 **Bằng chứng Throttling/Scaling:**
 > *Screenshot thông báo lỗi "Unreserved account concurrency can't go below 100" trên trang Edit Concurrency của Lambda*
 > 💡 **Hướng dẫn lấy ảnh:** 1. Vào dịch vụ **Lambda** > Chọn hàm `W5-Backend`. 2. Tab **Configuration** > **Concurrency** > Bấm **Edit**. 3. Chọn *Reserve concurrency*, gõ số `5`. 4. Chụp ảnh dòng chữ báo lỗi màu đỏ ngay dưới ô nhập số để chứng minh giới hạn quota của account lab.
