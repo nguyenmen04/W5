@@ -25,7 +25,8 @@
 ### Ứng dụng chạy end-to-end (Live Demo)
 **Action đại diện chứng minh app hoạt động:**
 > *Screenshot Giao diện web UI Secure File Hub tải lên file thành công*
-![Live Demo UI](đường-dẫn-ảnh.jpg)
+<img width="1458" height="776" alt="image" src="https://github.com/user-attachments/assets/dfb8bb83-037a-4135-b62a-8e15a4bce22c" />
+
 
 ---
 
