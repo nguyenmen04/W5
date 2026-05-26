@@ -1,9 +1,31 @@
 # W5 Evidence Pack - The Network Fortress
 
-**Group ID:** [Tên/ID Nhóm của bạn]
-**Thành viên:** [Tên các thành viên]
-**Link Repo:** [Đường dẫn GitHub/GitLab của project]
-**Link Evidence Pack W4:** [Đường dẫn tới báo cáo W4 nếu có]
+| Thông tin | Chi tiết |
+|-----------|---------|
+| **Nhóm** | XBrain_Group10 |
+| **Tên thành viên** | Nguyễn Thị Mến |
+| **Tuần** | W5 - The Network Fortress (11–15 tháng 5, 2026) |
+| **Deadline** | Thứ Năm 04-06-2026 |
+| **Link Repository** | https://github.com/hailv1209/XBrain_Group10.git |
+| **Evidence Pack tuần trước** | https://github.com/huyjaky/w4aws |
+| **Ngày tạo** | 01-06-2026 |
+
+---
+
+## 1. Application Recap & Reflection
+
+### Kiến trúc hiện tại
+**Mô tả ngắn ứng dụng:**
+- **Tên ứng dụng:** Secure File Hub
+- **Stack công nghệ:** HTML/JS (Frontend), Node.js (Lambda Backend), DynamoDB, API Gateway, Amazon EFS
+- **Lớp lưu trữ file:** Amazon EFS (W5-Secure-File-Hub)
+- **Cơ sở dữ liệu:** Amazon DynamoDB (FileMetadata)
+- **Backup được quản lý bởi:** AWS Backup (Fallback plan do giới hạn Lab account)
+
+### Ứng dụng chạy end-to-end (Live Demo)
+**Action đại diện chứng minh app hoạt động:**
+> *Screenshot Giao diện web UI Secure File Hub tải lên file thành công*
+![Live Demo UI](đường-dẫn-ảnh.jpg)
 
 ---
 
