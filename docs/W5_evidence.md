@@ -40,13 +40,15 @@
 | **VPC Model** | Single VPC Architecture (Default VPC) |
 | **Subnet Design** | 3 Public Subnets (Trải dài trên 3 Availability Zones) |
 | **Internet Access** | Thông qua Internet Gateway mặc định |
-| **Flow Logs** | ✅ Enabled (Ghi log vào CloudWatch) |
+| **Flow Logs** | Enabled (Ghi log vào CloudWatch) |
 
 **Bằng chứng Flow Logs:**
 > *Screenshot dòng log VPC Flow Logs (hiển thị ACCEPT hoặc REJECT)*
 > 💡 **Hướng dẫn lấy ảnh:** 1. Vào dịch vụ **VPC** > Chọn VPC của bạn. 2. Chuyển sang tab **Flow logs**, bấm vào tên cái *Destination* (CloudWatch Logs) màu xanh. 3. Trong CloudWatch, bấm vào cái *Log stream* đầu tiên. 4. Chụp màn hình các dòng log hiển thị chữ ACCEPT hoặc REJECT.
 ![Flow Logs](đường-dẫn-ảnh.jpg)
 *Note: VPC Flow Logs đã được kích hoạt, ghi lại traffic vào CloudWatch.*
+
+<img width="1362" height="153" alt="image" src="https://github.com/user-attachments/assets/7565a05c-5fd6-43ad-9898-44e27cc961f5" />
 
 ---
 
@@ -57,8 +59,8 @@
 ### Traffic Inspection & Block Rule (NACL Inbound)
 | Rule Number | Type | Protocol | Port Range | Source | Allow/Deny |
 |-------------|------|----------|------------|--------|------------|
-| 99 | SSH (22) | TCP | 22 | 0.0.0.0/0 | ❌ DENY |
-| 100 | All traffic | All | All | 0.0.0.0/0 | ✅ ALLOW |
+| 99 | SSH (22) | TCP | 22 | 0.0.0.0/0 | DENY |
+| 100 | All traffic | All | All | 0.0.0.0/0 | ALLOW |
 
 **Bằng chứng Block Request:**
 > *Screenshot màn hình Inbound Rules của NACL hiển thị Rule số 99 chặn port 22 (SSH)*
