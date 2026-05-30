@@ -68,6 +68,8 @@
 ![NACL Block](đường-dẫn-ảnh.jpg)
 *Note: Hệ thống đã thiết lập Explicit Deny Rule chặn port 22 (SSH) từ 0.0.0.0/0 tại tầng NACL.*
 
+<img width="1599" height="667" alt="image" src="https://github.com/user-attachments/assets/b8cd0d35-0797-424c-89b8-77496bac13d6" />
+
 ---
 
 ## 4. MH3 — File Storage Layer + Backup Plan
@@ -87,12 +89,14 @@
 ![EFS Mount](đường-dẫn-ảnh.jpg)
 *Note: Lambda đã mount thành công EFS và lưu file upload vào storage dùng chung.*
 
+<img width="1543" height="440" alt="image" src="https://github.com/user-attachments/assets/ca0ce748-a7ec-4b81-9f6d-42eb6f641253" />
+
 ### Restore Test (Fallback Plan)
 **Bằng chứng Backup Plan & Khôi phục:**
 > *Screenshot báo lỗi Access Denied đỏ lòm khi cố gắng tạo AWS Backup Plan*
 > 💡 **Hướng dẫn lấy ảnh:** 1. Vào dịch vụ **AWS Backup** > **Backup plans** > **Create backup plan** > Build a new plan. 2. Cuộn xuống dưới cùng bấm nút Create. 3. Màn hình sẽ văng ra dải lỗi màu đỏ "Access denied...". 4. Chụp dải lỗi đỏ đó để chứng minh giới hạn của tài khoản.
 ![Backup Plan Error](đường-dẫn-ảnh.jpg)
-*Note: Mặc dù nhóm đã nắm rõ quy trình tạo Backup Plan và Test Restore, tuy nhiên do tài khoản thực hành (Lab/Vocareum) bị giới hạn quyền IAM đối với dịch vụ AWS Backup, nhóm không thể lưu cấu hình và chạy test qua Console. Nhóm lựa chọn fallback plan là ghi chú minh chứng giới hạn của Lab account.*
+*Note: Mặc dù nhóm đã nắm rõ quy trình tạo Backup Plan và Test Restore, tuy nhiên do tài khoản thực hành (Lab/Vocareum) bị giới hạn quyền IAM đối với dịch vụ AWS Backup, em không thể lưu cấu hình và chạy test qua Console. Nhóm lựa chọn fallback plan là ghi chú minh chứng giới hạn của Lab account.*
 
 ---
 
@@ -112,12 +116,17 @@
 > *Screenshot lệnh test cURL báo lỗi 403 khi thiếu API Key*
 > 💡 **Hướng dẫn lấy ảnh 403:** Mở PowerShell trên máy tính, chạy lệnh: `curl -i https://ztd80lx47e.execute-api.ap-southeast-1.amazonaws.com/prod/api/files` rồi chụp ảnh kết quả trả về `HTTP/1.1 403 Forbidden`.
 ![API 403](đường-dẫn-ảnh.jpg)
+
+<img width="1263" height="326" alt="image" src="https://github.com/user-attachments/assets/3a649309-8a61-4502-b345-c631f1f69930" />
+
 *Note: API Gateway chặn request không có `x-api-key` header.*
 
 > *Screenshot lệnh test cURL thành công 200 khi có API Key hợp lệ*
 > 💡 **Hướng dẫn lấy ảnh 200:** Mở PowerShell, chạy lệnh: `curl -i -H "x-api-key: K6U0InMaVu7jiKPRVxvbH8OIBhdTnJyog2xuYGfc" https://ztd80lx47e.execute-api.ap-southeast-1.amazonaws.com/prod/api/files` rồi chụp ảnh kết quả trả về `HTTP/1.1 200 OK` kèm theo data.
 ![API 200](đường-dẫn-ảnh.jpg)
 *Note: Request mang Auth đầy đủ đã lọt vào Lambda.*
+
+<img width="1919" height="395" alt="image" src="https://github.com/user-attachments/assets/265f91f1-48cc-4468-b2f6-1987141c8c95" />
 
 ---
 
@@ -137,6 +146,8 @@
 ![Lambda Concurrency Error](đường-dẫn-ảnh.jpg)
 *Note: Nhóm lựa chọn phương pháp cấu hình Reserved Concurrency để chống bão request. Tuy nhiên, do giới hạn (Quota) của tài khoản Lab/Vocareum (Account Concurrency tối đa chỉ bằng 5), AWS không cho phép kích hoạt tính năng này vì không thỏa mãn yêu cầu tối thiểu 100 unreserved concurrency.*
 
+<img width="704" height="428" alt="image" src="https://github.com/user-attachments/assets/0c0bab22-1c38-4fed-8526-4975cbb8df59" />
+
 ---
 
 ## 7. Application Carry-Forward Verification
@@ -148,6 +159,8 @@
 > 💡 **Hướng dẫn lấy ảnh 2:** Vào dịch vụ **DynamoDB** > **Tables** > Chọn bảng `FileMetadata` > Bấm nút **Explore table items** ở góc trên phải. Chụp màn hình hiển thị danh sách file đang có trong bảng.
 ![DB Record](đường-dẫn-ảnh.jpg)
 
+<img width="1104" height="511" alt="image" src="https://github.com/user-attachments/assets/86a0cb72-a7d8-4285-877c-ec8f80eb3878" />
+
 ---
 
 ## 8. Negative Security Tests
@@ -155,3 +168,6 @@
 > *Screenshot thử gọi port/dịch vụ ngoài luồng nhưng bị Time Out hoặc Permission Denied*
 ![Negative Test](đường-dẫn-ảnh.jpg)
 *Note: Chứng minh cấu hình Security Group ở app tier không mở toang 0.0.0.0/0.*
+
+<img width="1647" height="262" alt="image" src="https://github.com/user-attachments/assets/eaeed0fc-e73d-43a6-b2e2-00cf8c244066" />
+
